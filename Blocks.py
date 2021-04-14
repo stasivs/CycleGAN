@@ -12,12 +12,12 @@ class ResBlock(nn.Module):
         self.block = nn.Sequential(
             nn.Conv2d(in_features, out_features, self.kernel_size,
                       self.stride, self.padding, bias=False),
-            nn.InstanceNorm2d(out_features),
+            nn.BatchNorm2d(out_features),
             nn.LeakyReLU(self.slope, True),
 
             nn.Conv2d(out_features, out_features, self.kernel_size,
                       self.stride, self.padding, bias=False),
-            nn.InstanceNorm2d(out_features)
+            nn.BatchNorm2d(out_features)
         )
 
         self.out = nn.LeakyReLU(self.slope)
