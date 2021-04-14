@@ -6,8 +6,8 @@ def resnet_encoder_layer(in_channels, out_channels, slope):
     padding = 1
 
     block = nn.Sequential(
-        nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding),
-        nn.InstanceNorm2d(out_channels),
+        nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding, bias=False),
+        nn.BatchNorm2d(out_channels),
         nn.LeakyReLU(slope, True)
     )
     return block
@@ -20,11 +20,37 @@ def resnet_decoder_layer(in_channels, out_channels, slope):
     out_padding = 1
 
     block = nn.Sequential(
-        nn.ConvTranspose2d(in_channels, out_channels, kernel_size, stride, padding, out_padding),
-        nn.InstanceNorm2d(out_channels),
+        nn.ConvTranspose2d(in_channels, out_channels, kernel_size, stride, padding, out_padding, bias=False),
+        nn.BatchNorm2d(out_channels),
         nn.LeakyReLU(slope, True)
     )
     return block
+
+def double_transform_layer(inp, out, slope, norm=True):
+    kernel_size = 3
+    stride = 1
+    padding = 1
+
+    block = nn.ModuleList([
+        nn.Conv2d(inp, out, kernel_size, stride, padding, bias=False),
+    ])
+
+    if norm:
+        block.append(nn.BatchNorm2d(out))
+
+    block.extend([
+        nn.LeakyReLU(slope, True),
+
+        nn.Conv2d(out, out, kernel_size, stride, padding, bias=False),
+        nn.BatchNorm2d(out),
+        nn.LeakyReLU(slope, True)
+    ])
+
+    return nn.Sequential(*block)
+
+def pool():
+  block = nn.MaxPool2d(2, 2)
+  return block
 
 
 def down_grade_layer(inp, out, slope, norm=True):
@@ -40,7 +66,6 @@ def down_grade_layer(inp, out, slope, norm=True):
     block.append(nn.LeakyReLU(slope, True))
 
     return nn.Sequential(*block)
-
 
 
 def up_grade_layer(inp, out, slope, dropout=False):
@@ -59,10 +84,3 @@ def up_grade_layer(inp, out, slope, dropout=False):
     block.append(nn.LeakyReLU(slope))
 
     return nn.Sequential(*block)
-
-
-if __name__ == "__main__":
-    up_grade_layer(3, 3, 0.02)
-    down_grade_layer(3, 3, 0.02)
-    resnet_encoder_layer(3, 3, 0.02)
-    resnet_decoder_layer(3, 3, 0.02)
