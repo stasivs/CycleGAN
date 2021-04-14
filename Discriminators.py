@@ -17,7 +17,7 @@ class PatchGAN(nn.Module):
             Layers.down_grade_layer(self.n * 2, self.n * 4, self.slope),  # (bs, 256, 32, 32)
 
             nn.Conv2d(self.n * 4, self.n * 8, 4, 1, 1),  # 512 x 31x31
-            nn.InstanceNorm2d(self.n * 8),
+            nn.BatchNorm2d(self.n * 8),
             nn.LeakyReLU(self.slope, inplace=True),
 
         )
