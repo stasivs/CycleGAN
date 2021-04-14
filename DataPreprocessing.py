@@ -1,7 +1,6 @@
 import os
 from PIL import Image
 
-import torchvision.datasets as datasets
 import torch.utils as utils
 from torch.utils.data import Dataset
 
@@ -21,8 +20,7 @@ class CustomDataset(Dataset):
         tensor_image = self.transform(image)
         return tensor_image
 
-
-def return_dataloader(path, transforms, batch_size=1, num_workers=-1):
+def return_dataloader(path, transforms, batch_size=2, num_workers=0):
     dataset = CustomDataset(path, transforms)
     dataloader = utils.data.DataLoader(dataset, shuffle=True,
                                        batch_size=batch_size, num_workers=num_workers)
@@ -30,4 +28,11 @@ def return_dataloader(path, transforms, batch_size=1, num_workers=-1):
 
 
 def return_const_photo(dataloader):
-    return next(dataloader)[0]
+    return next(iter(dataloader))[0]
+
+
+def return_img_from_tensor(img):
+    img = img.view((3, 256, 256))
+    img = img * 0.5 + 0.5
+    img = img.permute(1, 2, 0).numpy()
+    return img.clip(0, 1)
