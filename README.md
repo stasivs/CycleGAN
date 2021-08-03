@@ -22,14 +22,14 @@ There is an example how to train model:
 For example you have a Generator class and Discriminator class.
 
 class Generator(nn.Module):
-	def __init__(self):
-		super().__init__()
-		...
+    def __init__(self):
+        super().__init__()
+        ...
 	
 class Discriminator(nn.Module):
-	def __init__(self):
-		super().__init__()
-		...
+    def __init__(self):
+        super().__init__()
+        ...
 	
 To train them you need to pass them like this:
 '''
