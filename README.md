@@ -1,6 +1,6 @@
 # CycleGAN
 
-This project is an implimentation of CycleGAN architecture to 
+This project is an implementation of CycleGAN architecture to 
 train generative models
 
 ## Architecture
@@ -14,22 +14,26 @@ train generative models
 
 ## Usage
 
-You can use project implimentation of Generators and Discriminators or write your own.
+You can use project implementation of Generators and Discriminators or write your own.
 There is an example how to train model:
 
 ```python
 ''' 
 For example you have a Generator class and Discriminator class.
 
-class Generator:
-	pass
+class Generator(nn.Module):
+	def __init__(self):
+		super().__init__()
+		...
 	
-class Discriminator:
-	pass
+class Discriminator(nn.Module):
+	def __init__(self):
+		super().__init__()
+		...
 	
-To train them you need to pass them like this
+To train them you need to pass them like this:
 '''
 
-cg = CycleGAN(gpu_mode=True, generator=Generator, discriminator=Discriminator)
-netG, losses, image_hist = cg.fit(data1, data2) # Where data2 is target and data1 is what we want to interpolate to data2
+cg = CycleGAN(gpu_mode=True, const_photo=None, generator=Generator, discriminator=Discriminator)
+netG, losses, image_hist = cg.fit(data1, data2, epochs=50) # Where data2 is target and data1 is what we want to interpolate to data2
 ```
